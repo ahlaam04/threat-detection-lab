@@ -1,0 +1,58 @@
+id: DET-001
+name: SeTcbPrivilege Abuse by User Process
+status: production
+author: Ton Nom
+date: 2024-03-19
+
+mitre:
+  tactic: Privilege Escalation
+  technique_id: T1134
+  technique_name: Access Token Manipulation
+  url: https://attack.mitre.org/techniques/T1134/
+
+description: >
+  Detects RuntimeBroker.exe and explorer.exe requesting
+  SeTcbPrivilege — a critical Windows privilege normally
+  reserved for SYSTEM-level processes only.
+  User-space processes requesting this privilege indicates
+  token abuse or privilege escalation attempt.
+
+data_sources:
+  - WinEventLog Security EventCode 4672
+  - WinEventLog Security EventCode 4673
+
+spl_query: |
+  index=botsv3 sourcetype="WinEventLog"
+  (EventCode=4672 OR EventCode=4673)
+  | eval process=lower(coalesce(Process_Name, process_name))
+  | where match(process, "runtimebroker\.exe|explorer\.exe")
+  | eval technique="T1134 - Access Token Manipulation"
+  | eval tactic="Privilege Escalation"
+  | eval severity="Critical"
+  | table _time, host, Account_Name, process, Keywords, severity
+
+findings_in_botsv3:
+  detections: 729
+  affected_hosts:
+    - BSTOLL-L
+    - BGIST-L
+    - MKRAEUS-L
+  suspicious_processes:
+    - RuntimeBroker.exe
+    - explorer.exe
+  observation: >
+    Multiple occurrences of user-space processes requesting
+    SeTcbPrivilege across several machines simultaneously.
+    This is abnormal and indicates active privilege abuse.
+
+false_positives:
+  - Legitimate software updates in rare cases
+  - Custom enterprise software with elevated requirements
+
+tuning:
+  - Whitelist known admin hosts if needed
+  - Exclude specific service accounts if confirmed legitimate
+
+severity: critical
+confidence: high
+alert_schedule: every 30 minutes

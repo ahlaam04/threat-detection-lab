@@ -1,0 +1,51 @@
+id: DET-003
+name: System Reconnaissance via WMIC
+status: production
+author: Ton Nom
+date: 2024-03-19
+
+mitre:
+  tactic: Discovery
+  technique_id: T1082
+  technique_name: System Information Discovery
+  url: https://attack.mitre.org/techniques/T1082/
+
+description: >
+  Detects WMIC usage for system fingerprinting.
+  Attackers use wmic.exe to collect OS version, hardware
+  info, local datetime, and system configuration silently.
+  This is a classic pre-lateral-movement reconnaissance
+  technique.
+
+data_sources:
+  - WinEventLog Security EventCode 4688
+
+spl_query: |
+  index=botsv3 sourcetype="WinEventLog" EventCode=4688
+  | eval process=lower(coalesce(Process_Name, process_name))
+  | eval cmdline=lower(coalesce(Process_Command_Line, CommandLine))
+  | where match(process, "wmic\.exe")
+  | eval technique="T1047/T1082 - WMI Reconnaissance"
+  | eval tactic="Discovery"
+  | eval severity="Medium"
+  | table _time, host, Account_Name, process, cmdline, severity
+
+findings_in_botsv3:
+  detections: 536
+  observation: >
+    WMIC used extensively across multiple machines for
+    system information gathering. Pattern consistent with
+    an attacker performing pre-movement reconnaissance
+    to understand the target environment.
+
+false_positives:
+  - IT administrators running inventory scripts
+  - Monitoring agents using WMI
+
+tuning:
+  - Whitelist known IT admin accounts
+  - Exclude scheduled maintenance scripts
+
+severity: medium
+confidence: medium
+alert_schedule: every 60 minutes

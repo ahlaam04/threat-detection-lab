@@ -1,0 +1,60 @@
+id: DET-006
+name: Abnormal Process Creation Burst
+status: production
+author: Ton Nom
+date: 2024-03-19
+
+mitre:
+  tactic: Execution
+  technique_id: T1059
+  technique_name: Command and Scripting Interpreter
+  url: https://attack.mitre.org/techniques/T1059/
+
+description: >
+  Detects abnormal volume of process creation events
+  exceeding 20 per minute per host. This pattern indicates
+  possible malware automation, scripted attacks, or lateral
+  movement tools running on the compromised machine.
+  In BOTS v3, RuntimeBroker.exe was the primary process
+  responsible for this burst.
+
+data_sources:
+  - WinEventLog Security EventCode 4688
+
+spl_query: |
+  index=botsv3 sourcetype="WinEventLog" EventCode=4688
+  | bucket _time span=1m
+  | stats count as process_count,
+    dc(Process_Name) as unique_processes,
+    values(Process_Name) as processes_launched
+    by host, Account_Name, _time
+  | where process_count > 20
+  | eval risk=case(
+      process_count > 100, "Critical - Possible Malware",
+      process_count > 50,  "High - Abnormal Burst",
+      true(),              "Medium - Elevated Activity")
+  | eval technique="T1059/T1106 - Mass Process Creation"
+  | table _time, host, Account_Name, process_count,
+    unique_processes, risk, technique
+
+findings_in_botsv3:
+  detections: 7724
+  primary_process: RuntimeBroker.exe
+  observation: >
+    Highest volume detection in the lab — 7724 events.
+    RuntimeBroker.exe dominates the process creation burst.
+    This combined with privilege abuse (T1134) strongly
+    suggests active malware or exploitation framework
+    running on compromised machines.
+
+false_positives:
+  - System startup and Windows Update
+  - Software installation processes
+
+tuning:
+  - Increase threshold to 50 during known maintenance
+  - Exclude SYSTEM account during boot time window
+
+severity: high
+confidence: high
+alert_schedule: every 15 minutes

@@ -1,0 +1,52 @@
+id: DET-005
+name: Software Enumeration via Registry Query
+status: production
+author: Ton Nom
+date: 2024-03-19
+
+mitre:
+  tactic: Discovery
+  technique_id: T1012
+  technique_name: Query Registry
+  url: https://attack.mitre.org/techniques/T1012/
+
+description: >
+  Detects registry queries targeting installed software keys.
+  Attackers enumerate HKLM\Software\Microsoft\Windows\
+  CurrentVersion\Uninstall to identify installed applications
+  and find vulnerable software to exploit.
+
+data_sources:
+  - WinEventLog Security EventCode 4688
+
+spl_query: |
+  index=botsv3 sourcetype="WinEventLog" EventCode=4688
+  | eval process=lower(coalesce(Process_Name, process_name))
+  | eval cmdline=lower(coalesce(Process_Command_Line, CommandLine))
+  | where match(process, "reg\.exe|cmd\.exe")
+    AND match(cmdline, "uninstall|currentversion")
+  | eval technique="T1012 - Query Registry"
+  | eval tactic="Discovery"
+  | eval severity="Medium"
+  | table _time, host, Account_Name, process, cmdline, severity
+
+findings_in_botsv3:
+  detections: 1037
+  observation: >
+    Massive registry enumeration detected — 1037 occurrences.
+    This is the highest volume Discovery technique observed.
+    Pattern suggests automated enumeration script rather than
+    manual reconnaissance.
+
+false_positives:
+  - Software inventory tools
+  - Windows Installer operations
+  - IT asset management agents
+
+tuning:
+  - Exclude known inventory management processes
+  - Filter by time of day if IT scripts run on schedule
+
+severity: medium
+confidence: medium
+alert_schedule: every 60 minutes

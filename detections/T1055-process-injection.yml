@@ -1,0 +1,54 @@
+id: DET-002
+name: Repeated Privilege Requests by User Process
+status: production
+author: Ton Nom
+date: 2024-03-19
+
+mitre:
+  tactic: Privilege Escalation
+  technique_id: T1055
+  technique_name: Process Injection
+  url: https://attack.mitre.org/techniques/T1055/
+
+description: >
+  Detects burst of privilege requests from user processes
+  like explorer.exe and RuntimeBroker.exe within a 5-minute
+  window. Normal processes request privileges once at startup.
+  Repeated requests indicate active exploitation or
+  token manipulation.
+
+data_sources:
+  - WinEventLog Security EventCode 4673
+
+spl_query: |
+  index=botsv3 sourcetype="WinEventLog" EventCode=4673
+  | eval process=lower(coalesce(Process_Name, process_name))
+  | where match(process, "explorer\.exe|runtimebroker\.exe")
+  | bucket _time span=5m
+  | stats count as priv_requests,
+    values(Keywords) as privileges_used
+    by host, Account_Name, process, _time
+  | where priv_requests > 5
+  | eval technique="T1055 - Process Injection"
+  | eval severity="High"
+  | table _time, host, Account_Name, process,
+    priv_requests, privileges_used, severity
+
+findings_in_botsv3:
+  detections: 729
+  observation: >
+    Same population as T1134 — confirms that the privilege
+    abuse is both persistent and repetitive, strengthening
+    the hypothesis of active token manipulation.
+
+false_positives:
+  - Heavy system activity during Windows updates
+  - Enterprise monitoring tools
+
+tuning:
+  - Increase threshold from 5 to 10 if too noisy
+  - Exclude maintenance windows
+
+severity: high
+confidence: medium
+alert_schedule: every 30 minutes
