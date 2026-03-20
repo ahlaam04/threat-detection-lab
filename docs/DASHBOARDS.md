@@ -23,8 +23,6 @@ Two dashboards were created in Splunk to visualize the detection results and ATT
 
 **Purpose** : Give a complete overview of all suspicious activities detected in the environment.
 
-![SOC Overview](../screenshots/dashboard-soc-overview.png)
-
 ### Panel 1 — Detections by ATT&CK Technique
 **Visualization** : Bar Chart
 ```spl
@@ -52,6 +50,7 @@ index=botsv3 sourcetype="WinEventLog"
 | stats count by technique
 | sort -count
 ```
+<img width="1885" height="296" alt="image" src="https://github.com/user-attachments/assets/6db7c5bc-4888-4c99-9d8b-9096c05a9823" />
 
 ### Panel 2 — Suspicious Events Timeline
 **Visualization** : Line Chart
@@ -60,6 +59,7 @@ index=botsv3 sourcetype="WinEventLog"
 (EventCode=4672 OR EventCode=4673 OR EventCode=4688)
 | timechart span=1h count by EventCode
 ```
+<img width="1881" height="318" alt="image" src="https://github.com/user-attachments/assets/62c19392-2d29-4a18-888e-7e19372ec271" />
 
 ### Panel 3 — Top Affected Hosts
 **Visualization** : Bar Chart
@@ -70,6 +70,7 @@ index=botsv3 sourcetype="WinEventLog"
 | sort -count
 | head 10
 ```
+<img width="940" height="152" alt="Capture d&#39;écran 2026-03-20 200030" src="https://github.com/user-attachments/assets/64ed7d84-883b-43c8-a2dc-0e3ddb4b3abb" />
 
 ### Panel 4 — Top Suspicious Users
 **Visualization** : Table
@@ -83,6 +84,7 @@ index=botsv3 sourcetype="WinEventLog"
   AND Account_Name!="-"
 | head 10
 ```
+<img width="1872" height="587" alt="Capture d&#39;écran 2026-03-20 200228" src="https://github.com/user-attachments/assets/992d7df4-11b0-4798-bd94-769206b81812" />
 
 ### Panel 5 — Alerts by Severity
 **Visualization** : Pie Chart
@@ -98,14 +100,13 @@ index=botsv3 sourcetype="WinEventLog"
     true(), "Low")
 | stats count by severity
 ```
+<img width="1743" height="423" alt="Capture d&#39;écran 2026-03-20 200311" src="https://github.com/user-attachments/assets/ddd150ee-9ac2-4642-b834-6db8d01705df" />
 
 ---
 
 ## Dashboard 2 — MITRE ATT&CK Coverage
 
 **Purpose** : Show which ATT&CK techniques are covered by the detection rules and visualize coverage gaps.
-
-![MITRE Coverage](../screenshots/dashboard-mitre-coverage.png)
 
 ### Panel 1 — ATT&CK Technique Coverage Table
 **Visualization** : Table
@@ -129,6 +130,7 @@ T1059:Execution:Command Scripting:7724:High", ",")
   detections, severity, status
 | sort tactic
 ```
+<img width="1878" height="534" alt="Capture d&#39;écran 2026-03-20 200433" src="https://github.com/user-attachments/assets/4bc7d95b-53ba-46c4-9e78-005f82638433" />
 
 ### Panel 2 — Rules Coverage by Tactic
 **Visualization** : Bar Chart
@@ -141,6 +143,7 @@ T1059:Execution:Command Scripting:7724:High", ",")
 | eval rules_count=mvindex(split(data,":"),1)
 | table tactic, rules_count
 ```
+<img width="1872" height="430" alt="Capture d&#39;écran 2026-03-20 200519" src="https://github.com/user-attachments/assets/a41eaca3-20cc-4d7d-8bfc-86125466df93" />
 
 ### Panel 3 — Detection Volume by Tactic
 **Visualization** : Pie Chart
@@ -154,3 +157,4 @@ T1059:Execution:Command Scripting:7724:High", ",")
 | table tactic, total_detections
 | sort -total_detections
 ```
+<img width="1729" height="436" alt="Capture d&#39;écran 2026-03-20 200557" src="https://github.com/user-attachments/assets/a0714f44-b93b-4091-a318-b180af0db3a4" />
