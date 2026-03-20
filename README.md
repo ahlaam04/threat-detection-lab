@@ -393,7 +393,7 @@ This lab was built to :
 - Practice writing SPL queries based on real observations
 - Build a portfolio that demonstrates SOC analyst skills
 
-Every time I learn something new — a new technique, a new tool, a new concept — I come back to this lab and add it. This makes it a growing reference rather than a one-time exercise.
+Every time I learn something new a new technique, a new tool, a new concept, I come back to this lab and add it. This makes it a growing reference rather than a one-time exercise.
 
 ### What's coming next
 - More detection rules based on other BOTS v3 findings
