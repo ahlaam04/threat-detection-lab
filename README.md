@@ -400,7 +400,7 @@ Every time I learn something new a new technique, a new tool, a new concept, I c
 - Sigma rules format for each detection
 - Incident response playbook for each alert
 - MITRE ATT&CK Navigator coverage map export
-```
+
 
 ## 👤 Author
 
