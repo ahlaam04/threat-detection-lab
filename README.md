@@ -28,30 +28,6 @@ This project demonstrates end-to-end detection engineering skills : from raw log
 The dataset simulates a **real cyberattack against a fictional company called Frothly** a craft beer company with a hybrid 
 infrastructure (on-premise Windows machines + AWS cloud).
 
-The simulated attack covers a full kill chain :
-```
-Phase 1 → Initial Reconnaissance
-          Attacker gathers information about the target
-
-Phase 2 → Initial Access
-          Phishing email or exploitation to gain first foothold
-
-Phase 3 → Execution
-          Malicious code executed on compromised machines
-
-Phase 4 → Privilege Escalation
-          Attacker gains higher privileges (SYSTEM level)
-
-Phase 5 → Discovery
-          Internal reconnaissance — network, software, users
-
-Phase 6 → Lateral Movement
-          Moving from machine to machine inside the network
-
-Phase 7 → Exfiltration
-          Sensitive data stolen from the compromised environment
-```
-
 ### Infrastructure simulated
 ```
 On-Premise Windows machines :
