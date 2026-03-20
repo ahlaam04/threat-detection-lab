@@ -15,7 +15,7 @@ The goal of this project is to simulate a real SOC analyst and Detection Enginee
 
 This project demonstrates end-to-end detection engineering skills : from raw log analysis to actionable alerts mapped to a threat framework.
 
-> ⚠️ **Note — Work In Progress**
+> ⚠️ **Note : Work In Progress**
 > This project is actively being developed and is not yet complete.
 > It serves as a **personal learning reference**, I return to it
 > regularly to add new detection rules, improve existing ones,
