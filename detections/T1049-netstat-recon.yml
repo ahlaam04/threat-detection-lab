@@ -1,7 +1,7 @@
 id: DET-004
 name: Network Discovery via Netstat
 status: production
-author: Ton Nom
+author: Ahlam
 date: 2024-03-19
 
 mitre:
