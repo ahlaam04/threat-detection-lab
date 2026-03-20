@@ -188,6 +188,7 @@ index=botsv3 sourcetype="WinEventLog"
 | stats count by process, host
 | sort -count
 ```
+<img width="1919" height="718" alt="image" src="https://github.com/user-attachments/assets/7e6fd8c9-f0c6-45da-85dc-1d8102f69d60" />
 
 **Key finding — The smoking gun** :
 `RuntimeBroker.exe` and `explorer.exe` were the top processes requesting critical privileges.
@@ -208,6 +209,7 @@ index=botsv3 sourcetype="WinEventLog"
 (EventCode=4672 OR EventCode=4673 OR EventCode=4688)
 | timechart span=1h count by EventCode
 ```
+<img width="1918" height="718" alt="image" src="https://github.com/user-attachments/assets/c515f858-6b4a-45d6-8851-0dc2baa7a443" />
 
 **What I found** :
 - Attack activity concentrated between 03:00 and 12:00 AM
@@ -283,8 +285,6 @@ should never need this privilege level.
 ---
 
 ## ️ MITRE ATT&CK Coverage
-
-![Dashboard](screenshots/dashboard-mitre-coverage.png)
 
 | Tactic | ID | Technique | Detections | Severity | Status |
 |--------|----|-----------|------------|----------|--------|
