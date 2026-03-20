@@ -1,7 +1,7 @@
 id: DET-005
 name: Software Enumeration via Registry Query
 status: production
-author: Ton Nom
+author: Ahlam
 date: 2024-03-19
 
 mitre:
