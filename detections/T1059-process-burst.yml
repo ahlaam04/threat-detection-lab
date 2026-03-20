@@ -1,7 +1,7 @@
 id: DET-006
 name: Abnormal Process Creation Burst
 status: production
-author: Ton Nom
+author: Ahlam
 date: 2024-03-19
 
 mitre:
