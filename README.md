@@ -15,6 +15,12 @@ The goal of this project is to simulate a real SOC analyst and Detection Enginee
 
 This project demonstrates end-to-end detection engineering skills : from raw log analysis to actionable alerts mapped to a threat framework.
 
+> ⚠️ **Note — Work In Progress**
+> This project is actively being developed and is not yet complete.
+> It serves as a **personal learning reference** — I return to it
+> regularly to add new detection rules, improve existing ones,
+> and deepen my understanding of threat detection engineering.
+> Contributions and suggestions are welcome.
 ---
 
 ##  Dataset — Boss of the SOC v3 (BOTS v3)
@@ -360,7 +366,43 @@ they exist.
 | Git | Latest | Version control |
 
 ---
+## 📌 Project Status & Roadmap
 
+> This project is a **living learning reference**, not a finished product.
+> It is continuously updated as I learn new concepts and techniques.
+
+### Current Status
+```
+✅ Splunk lab deployed and configured
+✅ BOTS v3 dataset loaded and analyzed
+✅ 6 detection rules created and documented
+✅ 2 SOC dashboards built
+✅ Full GitHub documentation
+🔄 Investigation section in progress
+⬜ MITRE ATT&CK Navigator export
+⬜ Additional detection rules
+⬜ Sigma rules conversion
+⬜ Incident response playbooks
+```
+
+### Why this project exists
+
+This lab was built to :
+- Learn detection engineering from real attack data
+- Understand how attackers operate across the kill chain
+- Practice writing SPL queries based on real observations
+- Build a portfolio that demonstrates SOC analyst skills
+
+Every time I learn something new — a new technique, a new tool, a new concept — I come back to this lab and add it. This makes it a growing reference rather than a one-time exercise.
+
+### What's coming next
+- More detection rules based on other BOTS v3 findings
+- Sigma rules format for each detection
+- Incident response playbook for each alert
+- MITRE ATT&CK Navigator coverage map export
+```
+
+---
 ## 👤 Author
 
 **Ahlam Boumehdi**
