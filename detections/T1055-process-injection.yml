@@ -1,7 +1,7 @@
 id: DET-002
 name: Repeated Privilege Requests by User Process
 status: production
-author: Ton Nom
+author: Ahlam
 date: 2024-03-19
 
 mitre:
