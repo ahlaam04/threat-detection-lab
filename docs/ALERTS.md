@@ -33,6 +33,7 @@ Schedule    : Every 30 minutes
 Time range  : Last 30 minutes
 Trigger     : Number of results > 0
 ```
+<img width="1804" height="253" alt="Capture d&#39;écran 2026-03-20 202125" src="https://github.com/user-attachments/assets/3317ae70-da8b-4ab6-af2c-fafe3f688331" />
 
 **SPL Query** :
 ```spl
@@ -50,7 +51,8 @@ index=botsv3 sourcetype="WinEventLog"
 ```
 
 **Results in BOTS v3** :  729 detections
-**False positives** :  Very low — these processes rarely need this privilege level.
+<img width="1919" height="743" alt="Capture d&#39;écran 2026-03-20 202332" src="https://github.com/user-attachments/assets/5e0a4bf1-2b8a-4978-ad90-be35b9b1742b" />
+
 
 ---
 
@@ -68,6 +70,7 @@ Schedule    : Every 30 minutes
 Time range  : Last 30 minutes
 Trigger     : Number of results > 0
 ```
+<img width="1794" height="260" alt="Capture d&#39;écran 2026-03-20 201904" src="https://github.com/user-attachments/assets/6da88ed0-00d6-4bd7-99ba-e4b85c249796" />
 
 **SPL Query** :
 ```spl
@@ -88,6 +91,7 @@ index=botsv3 sourcetype="WinEventLog" EventCode=4673
 ```
 
 **Results in BOTS v3** : 729 detections
+<img width="1907" height="737" alt="Capture d&#39;écran 2026-03-20 202030" src="https://github.com/user-attachments/assets/4c5bbfdf-1ac8-4cf4-bd20-333c1a02fbb8" />
 
 ---
 
@@ -104,6 +108,7 @@ Schedule    : Every 60 minutes
 Time range  : Last 60 minutes
 Trigger     : Number of results > 0
 ```
+<img width="1819" height="285" alt="Capture d&#39;écran 2026-03-20 201647" src="https://github.com/user-attachments/assets/9f94df1c-4091-48ac-b7f9-dfc7d85f6fb8" />
 
 **SPL Query** : 
 ```spl
@@ -120,6 +125,7 @@ index=botsv3 sourcetype="WinEventLog" EventCode=4688
 ```
 
 **Results in BOTS v3** : 536 detections
+<img width="1911" height="737" alt="Capture d&#39;écran 2026-03-20 201813" src="https://github.com/user-attachments/assets/889a218b-435f-48f8-84ae-3858ac267334" />
 
 ---
 
@@ -137,6 +143,7 @@ Schedule    : Every 60 minutes
 Time range  : Last 60 minutes
 Trigger     : Number of results > 0
 ```
+<img width="1808" height="288" alt="Capture d&#39;écran 2026-03-20 201434" src="https://github.com/user-attachments/assets/2d1ffd09-b7db-4db5-9aee-d2762d700181" />
 
 **SPL Query** : 
 ```spl
@@ -155,6 +162,7 @@ index=botsv3 sourcetype="WinEventLog" EventCode=4688
 ```
 
 **Results in BOTS v3** : 78 detections
+<img width="1917" height="732" alt="Capture d&#39;écran 2026-03-20 201544" src="https://github.com/user-attachments/assets/31756506-9f54-4763-8736-a81b24cc9985" />
 
 ---
 
@@ -171,6 +179,7 @@ Schedule    : Every 60 minutes
 Time range  : Last 60 minutes
 Trigger     : Number of results > 0
 ```
+<img width="1834" height="278" alt="Capture d&#39;écran 2026-03-20 201146" src="https://github.com/user-attachments/assets/fdb09335-83a5-4e6a-9da3-ee523f91ad41" />
 
 **SPL Query** :
 ```spl
@@ -186,8 +195,8 @@ index=botsv3 sourcetype="WinEventLog" EventCode=4688
   cmdline, severity, technique
 | sort -_time
 ```
-
 **Results in BOTS v3** : 1,037 detections
+<img width="1919" height="737" alt="Capture d&#39;écran 2026-03-20 200856" src="https://github.com/user-attachments/assets/2d0ab743-0ff2-4c95-b2b6-2db45a722850" />
 
 ---
 
@@ -204,6 +213,7 @@ Schedule    : Every 15 minutes (cron: */15 * * * *)
 Time range  : Last 15 minutes
 Trigger     : Number of results > 0
 ```
+<img width="1813" height="298" alt="Capture d&#39;écran 2026-03-20 201218" src="https://github.com/user-attachments/assets/75a01a5b-a8d4-4dc0-9d9b-9b96d8ff84a8" />
 
 **SPL Query** : 
 ```spl
@@ -224,6 +234,7 @@ index=botsv3 sourcetype="WinEventLog" EventCode=4688
   unique_processes, risk, technique
 | sort -process_count
 ```
+<img width="1919" height="736" alt="Capture d&#39;écran 2026-03-20 201301" src="https://github.com/user-attachments/assets/5383ae23-e37c-4527-b0ea-7402d52bac56" />
 
 **Results in BOTS v3** : 7,724 detections
 
