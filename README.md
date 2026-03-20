@@ -21,14 +21,11 @@ This project demonstrates end-to-end detection engineering skills : from raw log
 
 ### What is BOTS v3 ?
 
-**Boss of the SOC (BOTS) v3** is a professional-grade attack 
-simulation dataset created by **Splunk**. It was originally 
-used in the Splunk .conf2018 Security competition.
+**Boss of the SOC (BOTS) v3** is a professional grade attack simulation dataset created by **Splunk**. It was originally used in the Splunk .conf2018 Security competition.
 
 ### What does it simulate ?
 
-The dataset simulates a **real cyberattack against a fictional 
-company called Frothly** — a craft beer company with a hybrid 
+The dataset simulates a **real cyberattack against a fictional company called Frothly** a craft beer company with a hybrid 
 infrastructure (on-premise Windows machines + AWS cloud).
 
 The simulated attack covers a full kill chain :
@@ -151,7 +148,7 @@ index=botsv3 | stats count by host | sort -count
 | PCERF-L | Medium | 🟡 Medium |
 
 **Key observation** :
-BSTOLL-L generated significantly more events than any other machine — this became my primary investigation target.
+BSTOLL-L generated significantly more events than any other machine, this became my primary investigation target.
 
 ### Step 3 — Analyzing Windows Event Codes
 
