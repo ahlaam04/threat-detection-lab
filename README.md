@@ -5,8 +5,7 @@
 
 ## Project Objective
 
-The goal of this project is to simulate a real SOC analyst 
-and Detection Engineer workflow :
+The goal of this project is to simulate a real SOC analyst and Detection Engineer workflow :
 
 - Analyze real attack logs from a simulated enterprise breach
 - Identify suspicious behaviors and map them to MITRE ATT&CK
@@ -14,8 +13,7 @@ and Detection Engineer workflow :
 - Create professional SOC dashboards for threat visibility
 - Document findings in a structured and reproducible way
 
-This project demonstrates end-to-end detection engineering skills :
-from raw log analysis to actionable alerts mapped to a threat framework.
+This project demonstrates end-to-end detection engineering skills : from raw log analysis to actionable alerts mapped to a threat framework.
 
 ---
 
@@ -89,31 +87,6 @@ Cloud Infrastructure :
 **Total : 300,000+ events covering a full attack scenario**
 
 ---
-
-## ️ Lab Architecture
-```
-Kali Linux
-│
-├── Splunk Enterprise 10.2 (localhost:8000)
-│     │
-│     ├── BOTS v3 Dataset (300,000+ events / Aug 2018)
-│     │     ├── Windows Security Logs (EventCode 4688/4672/4673)
-│     │     ├── DNS Logs (stream:dns)
-│     │     ├── Network Logs (stream:ip / stream:tcp)
-│     │     └── AWS CloudTrail Logs
-│     │
-│     ├── 6 Custom SPL Detection Rules
-│     ├── 6 Scheduled Alerts (15-60 min intervals)
-│     └── 2 SOC Dashboards
-│
-└── GitHub Documentation
-      ├── Detection rules (YAML format)
-      ├── Alert configurations
-      └── Dashboard configurations
-```
-
----
-
 ##  Investigation & Identification
 
 Before writing any detection rule, I followed a structured 
@@ -148,10 +121,11 @@ to understand what I was working with.
 ```spl
 index=botsv3 | stats count by sourcetype | sort -count
 ```
+<img width="1919" height="738" alt="image" src="https://github.com/user-attachments/assets/28f15e13-c632-4e8d-a58e-48b366951358" />
 
 
 **What I found** :
-- 300,000+ events across 15+ data sources
+- 2,000,000+ events across 15+ data sources
 - Mix of Windows endpoints, Linux servers, and AWS cloud
 - Data covering a full attack scenario from August 2018
 
@@ -165,6 +139,7 @@ This means the attacker had to compromise both environments.
 ```spl
 index=botsv3 | stats count by host | sort -count
 ```
+<img width="1919" height="749" alt="image" src="https://github.com/user-attachments/assets/5364cad0-270b-4e8e-be70-7358e77d3397" />
 
 **What I found** :
 
@@ -186,6 +161,7 @@ index=botsv3 sourcetype="WinEventLog"
 | stats count by EventCode
 | sort -count
 ```
+<img width="1919" height="640" alt="image" src="https://github.com/user-attachments/assets/3bae303c-4afd-47d3-8fc0-94485248a991" />
 
 **What I found** :
 
@@ -265,39 +241,44 @@ Always filter by `source="WinEventLog:Security"` when looking for authentication
 
 ##  Key Findings
 
-During the investigation of BOTS v3 logs, I identified 
-the following suspicious behaviors :
+During the investigation of BOTS v3 logs, I identified the following suspicious behaviors :
 
 ### Finding 1 — Privilege Abuse (Critical)
 **Host** : Multiple Windows machines
-**Observation** :  `RuntimeBroker.exe` and `explorer.exe` 
-using `SeTcbPrivilege`  a critical Windows privilege 
-normally reserved for SYSTEM-level processes only.
+**Observation** :  `RuntimeBroker.exe` and `explorer.exe` using `SeTcbPrivilege`  a critical Windows privilege normally reserved for SYSTEM-level processes only.
 **Volume** :729 occurrences
 **Why suspicious** : These are user-space processes that 
 should never need this privilege level.
 
+<img width="1915" height="418" alt="Capture d&#39;écran 2026-03-19 181718" src="https://github.com/user-attachments/assets/7018fdda-e7b2-41d1-8a0c-890eaf2f0bcb" />
+
+
 ### Finding 2 — Massive Registry Enumeration (Medium)
 **Host** :  Multiple machines
-**Observation** : `reg.exe` and `cmd.exe` querying 
-Uninstall keys to enumerate installed software.
+**Observation** : `reg.exe` and `cmd.exe` querying Uninstall keys to enumerate installed software.
 **Volume** :  1,037 occurrences
 **Why suspicious** : Attackers enumerate installed software to identify vulnerable applications.
+<img width="1918" height="640" alt="Capture d&#39;écran 2026-03-19 181004" src="https://github.com/user-attachments/assets/4dc86745-5770-4ae7-aadd-2be0b5a6f066" />
+
 
 ### Finding 3 — Abnormal Process Creation Burst (High)
 **Host** : Multiple machines
-**Observation** : Over 7,724 process creation events 
-with bursts exceeding 20 processes per minute.
-**Why suspicious** : Indicates possible automation, 
-malware activity, or scripted execution.
+**Observation** : Over 1,000 process creation events with bursts exceeding 20 processes per minute.
+**Why suspicious** : Indicates possible automation, malware activity, or scripted execution.
+<img width="1917" height="732" alt="Capture d&#39;écran 2026-03-19 180227" src="https://github.com/user-attachments/assets/0497c97c-3e27-4afc-b282-22b06d616da2" />
+
 
 ### Finding 4 — WMIC System Reconnaissance (Medium)
 **Volume** : 536 occurrences
 **Why suspicious** :  WMIC used for system fingerprinting  collecting OS version, hardware info, local datetime.
+<img width="1917" height="119" alt="Capture d&#39;écran 2026-03-19 180802" src="https://github.com/user-attachments/assets/17d3cf96-f438-4cb4-9553-58be045d59ef" />
+
 
 ### Finding 5 — Netstat Network Discovery (Medium)
 **Volume** : 78 occurrences
 **Why suspicious** : Local port scanning to identify active connections and listening services.
+<img width="1917" height="99" alt="Capture d&#39;écran 2026-03-19 180852" src="https://github.com/user-attachments/assets/b35b88b0-91cf-4220-b7ae-c1a96c643584" />
+
 
 ---
 
@@ -316,29 +297,40 @@ malware activity, or scripted execution.
 
 ---
 
-## 📊 SOC Dashboards
+##  SOC Dashboards
 
 ### Dashboard 1 — SOC Threat Overview
-![SOC Overview](screenshots/dashboard-soc-overview.png)
-
 Panels included :
 - Detections by ATT&CK Technique (Bar Chart)
+<img width="937" height="241" alt="Capture d&#39;écran 2026-03-19 232737" src="https://github.com/user-attachments/assets/4174fbc3-ea16-4376-9ff7-ef20ea1d363c" />
+
 - Suspicious Events Timeline (Line Chart)
+<img width="931" height="187" alt="Capture d&#39;écran 2026-03-19 232820" src="https://github.com/user-attachments/assets/a03557c7-9e2d-4640-a8a8-24c8ae8c113a" />
+
 - Top Affected Hosts (Bar Chart)
+<img width="924" height="190" alt="Capture d&#39;écran 2026-03-19 232841" src="https://github.com/user-attachments/assets/2f4d28f6-c5cf-444f-8ac2-7a0babdcab2e" />
+
 - Top Suspicious Users (Table)
+<img width="935" height="251" alt="Capture d&#39;écran 2026-03-19 232901" src="https://github.com/user-attachments/assets/8ab94e3c-bbf9-4aed-98bb-c2d4b0045fa1" />
+
 - Alerts by Severity (Pie Chart)
+<img width="560" height="189" alt="Capture d&#39;écran 2026-03-19 232927" src="https://github.com/user-attachments/assets/1350741c-0178-427f-81ef-8ed79a014825" />
+
 
 ### Dashboard 2 — MITRE ATT&CK Coverage
-![MITRE Coverage](screenshots/dashboard-mitre-coverage.png)
-
 Panels included :
 - ATT&CK Technique Coverage Table
+<img width="935" height="248" alt="Capture d&#39;écran 2026-03-19 232450" src="https://github.com/user-attachments/assets/ef4118d5-f9bf-4b09-9530-f5712176cf2a" />
+
 - Rules Coverage by Tactic (Bar Chart)
+<img width="949" height="179" alt="Capture d&#39;écran 2026-03-19 232621" src="https://github.com/user-attachments/assets/169a7b77-9c13-4e38-8d54-dc09fc02d5e6" />
+
 - Detection Volume by Tactic (Pie Chart)
+<img width="575" height="173" alt="Capture d&#39;écran 2026-03-19 232648" src="https://github.com/user-attachments/assets/2a03e802-07c7-4a87-a619-22cec3352171" />
 
 ---
 
-## ⚙️ Detection Rules
+##  Detection Rules
 
 See [detections/](detections/) folder for all YAML-documented rules.
 
@@ -353,7 +345,7 @@ See [detections/](detections/) folder for all YAML-documented rules.
 
 ---
 
-## 🔧 Setup & Configuration
+##  Setup & Configuration
 
 - [Installation Guide](docs/INSTALL.md)
 - [Alert Configuration](docs/ALERTS.md)
@@ -361,7 +353,7 @@ See [detections/](detections/) folder for all YAML-documented rules.
 
 ---
 
-## 💡 Key Lessons Learned
+##  Key Lessons Learned
 
 **1. Always filter by log source**
 EventCode 4625 exists in both Application and Security logs.
@@ -384,7 +376,7 @@ they exist.
 
 ---
 
-## 🛠️ Tools Used
+## Tools Used
 
 | Tool | Version | Purpose |
 |------|---------|---------|
@@ -399,5 +391,5 @@ they exist.
 ## 👤 Author
 
 **Ahlam Boumehdi**
-Cybersecurity Student | Security Enthusiast
+Cybersecurity Engineering Student
 LinkedIn : www.linkedin.com/in/ahlam-boumehdi
