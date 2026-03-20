@@ -402,7 +402,6 @@ Every time I learn something new a new technique, a new tool, a new concept, I c
 - MITRE ATT&CK Navigator coverage map export
 ```
 
----
 ## 👤 Author
 
 **Ahlam Boumehdi**
