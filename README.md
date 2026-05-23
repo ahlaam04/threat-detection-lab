@@ -119,7 +119,8 @@ This means the attacker had to compromise both environments.
 ```spl
 index=botsv3 | stats count by host | sort -count
 ```
-<img width="1919" height="749" alt="image" src="https://github.com/user-attachments/assets/5364cad0-270b-4e8e-be70-7358e77d3397" />
+<img width="1919" height="739" alt="image" src="https://github.com/user-attachments/assets/2453f0d7-eb81-413c-9cdf-ace4627f7b45" />
+
 
 **What I found** :
 
