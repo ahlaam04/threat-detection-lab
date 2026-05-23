@@ -145,7 +145,8 @@ index=botsv3 sourcetype="WinEventLog"
 | stats count by EventCode
 | sort -count
 ```
-<img width="1919" height="640" alt="image" src="https://github.com/user-attachments/assets/3bae303c-4afd-47d3-8fc0-94485248a991" />
+<img width="1596" height="521" alt="image" src="https://github.com/user-attachments/assets/842ec4c6-5de4-43da-a2e7-ed2379d48246" />
+
 
 **What I found** :
 
