@@ -160,6 +160,8 @@ index=botsv3 sourcetype="WinEventLog"
 
 **Key observation** :
 EventCode 4672 (Special Privileges) appeared 8,497 times abnormally high. This was my first real indicator of privilege abuse.
+<img width="927" height="518" alt="image" src="https://github.com/user-attachments/assets/a011ea16-47a9-45b2-adfa-fe6f112e7eff" />
+
 
 ### Step 4 — Identifying Suspicious Processes
 
