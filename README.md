@@ -64,6 +64,7 @@ Cloud Infrastructure :
 | aws:cloudtrail | 9,212 | AWS API activity logs |
 
 **Total : 300,000+ events covering a full attack scenario**
+<img width="1908" height="655" alt="image" src="https://github.com/user-attachments/assets/cc90b67b-fd3f-44cd-b513-5286bfc3d5f8" />
 
 ---
 ##  Investigation & Identification
