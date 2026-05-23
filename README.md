@@ -132,6 +132,9 @@ index=botsv3 | stats count by host | sort -count
 
 **Key observation** :
 BSTOLL-L generated significantly more events than any other machine, this became my primary investigation target.
+<img width="1400" height="727" alt="image" src="https://github.com/user-attachments/assets/6d97f8fe-1475-4296-ab49-dc82051f06ab" />
+
+
 
 ### Step 3 — Analyzing Windows Event Codes
 
