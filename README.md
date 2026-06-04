@@ -259,7 +259,8 @@ mimicking Internet Explorer — was dropped in
 establish a control connection to an external server.
 
 **MITRE :** T1071.001 — C2 over Web Protocols
-<img width="945" height="405" alt="image" src="https://github.com/user-attachments/assets/211c1f4b-2c78-4134-b06b-7170e5f776f3" />
+<img width="1446" height="739" alt="Capture d&#39;écran 2026-05-23 211713" src="https://github.com/user-attachments/assets/6bbe28e3-aac2-4f5a-87c9-8db54746436a" />
+
 
 
 ### 🔴 Finding 3 — Obfuscated PowerShell + AMSI Bypass (Critical)
@@ -277,7 +278,8 @@ The decoded payload performed :
 
 **MITRE :** T1059.001, T1027, T1562.001
 
-<img width="605" height="232" alt="image" src="https://github.com/user-attachments/assets/64063bcd-a3a0-475c-bee0-d152e7e2ac60" />
+<img width="903" height="346" alt="image" src="https://github.com/user-attachments/assets/28e3ce4b-8ded-4fa6-824a-f67d5aabccf3" />
+
 
 
 ### 🔴 Finding 4 — UAC Bypass via Fodhelper (Critical)
@@ -288,7 +290,8 @@ any user alert using the Fodhelper technique :
 1. Modified registry key :
    `HKCU\Software\Classes\ms-settings\Shell\Open\command`
 
-<img width="605" height="59" alt="image" src="https://github.com/user-attachments/assets/c08b4857-328c-4369-afbe-b07c18b9e36f" />
+<img width="1575" height="153" alt="Capture d&#39;écran 2026-06-03 151805" src="https://github.com/user-attachments/assets/3a3fa7d2-9a7e-40c3-9753-70c8896807b1" />
+
 
 3. Payload stored in :
    `HKCU\Software\Microsoft\Windows Update\Update`
@@ -296,9 +299,8 @@ any user alert using the Fodhelper technique :
 
 **Evidence :** Sysmon EventID 13 (Registry Value Set)
 **MITRE :** T1548.002 — Bypass UAC via Fodhelper
-<img width="605" height="58" alt="image" src="https://github.com/user-attachments/assets/5bdc4491-521a-4670-a5eb-838f33d89fe4" />
 
-
+<img width="1610" height="154" alt="Capture d&#39;écran 2026-06-03 151517" src="https://github.com/user-attachments/assets/97a0c8ad-4052-4f98-bdcd-c0995d0de2d3" />
 
 
 ### 🔴 Finding 5 — Backdoor Account Created (Critical)
@@ -308,7 +310,8 @@ The attacker created a persistent backdoor account :
 net user /add svcvnc Password123!
 net localgroup administrators svcvnc /add
 ```
-<img width="352" height="241" alt="image" src="https://github.com/user-attachments/assets/de65a78f-11bf-4dbf-b347-853755d7fe4d" />
+<img width="660" height="451" alt="Capture d&#39;écran 2026-06-03 141048" src="https://github.com/user-attachments/assets/0dfa46b9-7053-4b56-b3c4-559375ae9b58" />
+
 
 Account lifecycle confirmed by EventCodes :
 - **4720** → Account created
@@ -317,26 +320,25 @@ Account lifecycle confirmed by EventCodes :
 - **4732** → Added to Administrators group
   
 -> Event ID 4720 → account creation
-<img width="605" height="263" alt="image" src="https://github.com/user-attachments/assets/f0090dd6-f959-48bf-88fd-4002138ee1ea" />
+<img width="1301" height="565" alt="Capture d&#39;écran 2026-06-03 133518" src="https://github.com/user-attachments/assets/925abcd7-4fb7-4a4f-9dd9-2d244c1bee3c" />
 
-<img width="605" height="283" alt="image" src="https://github.com/user-attachments/assets/0574172b-7a49-4a93-a045-d54376031754" />
 
 -> Event ID 4732 → Adding to a Local Group
+<img width="1236" height="656" alt="Capture d&#39;écran 2026-06-03 133933" src="https://github.com/user-attachments/assets/3b24d260-e5f9-44e2-8841-ccdbbb1f409b" />
 
-<img width="605" height="321" alt="image" src="https://github.com/user-attachments/assets/3dcdb7f5-5ef7-484d-addf-c5f3e519de99" />
 
 -> Event ID 4732 → Adding to the Administrators group
+<img width="1432" height="685" alt="Capture d&#39;écran 2026-06-03 133838" src="https://github.com/user-attachments/assets/ebcec89c-9296-49fa-ba7e-795e2e6d9e12" />
 
-<img width="605" height="289" alt="image" src="https://github.com/user-attachments/assets/2c401a8c-be56-4dc6-94fd-2c6ef4a2198d" />
 
 
 -> Event ID 4722 → Account Activation
+<img width="1015" height="540" alt="Capture d&#39;écran 2026-06-03 134604" src="https://github.com/user-attachments/assets/83dab949-ecfc-4eea-a1c9-fd9ed9da1813" />
 
-<img width="605" height="322" alt="image" src="https://github.com/user-attachments/assets/da13c09b-abfc-487c-8a01-d60ef47311a3" />
 
 -> Event ID 4724 → password reset
+<img width="1111" height="573" alt="Capture d&#39;écran 2026-06-03 134710" src="https://github.com/user-attachments/assets/f55c412f-5800-474d-9923-d81ae4acc267" />
 
-<img width="605" height="312" alt="image" src="https://github.com/user-attachments/assets/c4f067c0-e197-485f-a583-5bb8aed52f61" />
 
 
 22:08:17 4720 Creating the svcvnc account
@@ -372,10 +374,8 @@ the initial access vector of the entire attack.
 
 **MITRE :** T1190 — Exploit Public-Facing Application
 
-<img width="605" height="309" alt="image" src="https://github.com/user-attachments/assets/98a4bc40-07ab-482b-9c49-8f275ec7cb69" />
+<img width="537" height="539" alt="Capture d&#39;écran 2026-06-02 203313" src="https://github.com/user-attachments/assets/f6b86ca9-3df3-4314-aa99-1e2910752d7a" />
 
-
----
 
 ### 🟠 Finding 7 — SMB Network Reconnaissance (High)
 
@@ -389,8 +389,8 @@ discovery scanning or a lateral movement attempt
 targeting other internal hosts.
 
 **MITRE :** T1021.002, T1046
+<img width="1196" height="605" alt="Capture d&#39;écran 2026-06-03 160203" src="https://github.com/user-attachments/assets/3c7c41a1-5dd9-4e57-8781-6df4d9dd1162" />
 
-<img width="605" height="306" alt="image" src="https://github.com/user-attachments/assets/23909909-fee5-4475-815a-dc5a36376696" />
 
 
 ## ️ MITRE ATT&CK Coverage
