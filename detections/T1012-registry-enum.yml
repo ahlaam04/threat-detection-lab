@@ -2,7 +2,7 @@ id: DET-005
 name: Software Enumeration via Registry Query
 status: production
 author: Ahlam
-date: 2024-03-19
+date: 2025-03-19
 
 mitre:
   tactic: Discovery
