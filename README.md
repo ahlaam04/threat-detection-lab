@@ -461,12 +461,7 @@ See [detections/](detections/) folder for all YAML-documented rules.
 
 | File | Technique | Description |
 |------|-----------|-------------|
-| T1134-token-abuse.yml | T1134 | SeTcbPrivilege abuse |
-| T1055-process-injection.yml | T1055 | Token manipulation |
-| T1082-wmic-recon.yml | T1082 | WMIC reconnaissance |
-| T1049-netstat-recon.yml | T1049 | Network discovery |
-| T1012-registry-enum.yml | T1012 | Registry enumeration |
-| T1059-process-burst.yml | T1059 | Process creation burst |
+
 
 ---
 
