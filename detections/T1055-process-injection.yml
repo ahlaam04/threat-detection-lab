@@ -2,7 +2,7 @@ id: DET-002
 name: Repeated Privilege Requests by User Process
 status: production
 author: Ahlam
-date: 2024-03-19
+date: 2025-03-19
 
 mitre:
   tactic: Privilege Escalation
