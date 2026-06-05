@@ -2,7 +2,7 @@ id: DET-006
 name: Abnormal Process Creation Burst
 status: production
 author: Ahlam
-date: 2024-03-19
+date: 2025-03-19
 
 mitre:
   tactic: Execution
