@@ -2,7 +2,7 @@ id: DET-004
 name: Network Discovery via Netstat
 status: production
 author: Ahlam
-date: 2024-03-19
+date: 2025-03-19
 
 mitre:
   tactic: Discovery
