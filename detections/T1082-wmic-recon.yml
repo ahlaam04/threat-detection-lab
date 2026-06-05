@@ -2,7 +2,7 @@ id: DET-003
 name: System Reconnaissance via WMIC
 status: production
 author: Ahlam
-date: 2024-03-19
+date: 2025-03-19
 
 mitre:
   tactic: Discovery
