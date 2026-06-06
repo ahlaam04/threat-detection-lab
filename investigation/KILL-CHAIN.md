@@ -20,32 +20,32 @@
 
 ATTACKER (192.168.8.103)
         |
-        | POST saveGangster.action
-        | OGNL payload → #cmd='cat /etc/passwd'
+        |   POST saveGangster.action
+        |   OGNL payload → #cmd='cat /etc/passwd'
         v
 HOTH (Apache Struts Server)
         |
-        | RCE confirmed
-        | Commands executed on Linux
-        | Reverse shell → 45.77.53.176:8088
+        |   RCE confirmed
+        |   Commands executed on Linux
+        |   Reverse shell → 45.77.53.176:8088
         v
 FYODOR-L.froth.ly
         |
-        | powershell.exe -NoP -NonI -W Hidden -enc
-        | → AMSI bypass
-        | → RC4 payload download
-        | → iexeplorer.exe dropped
+        |   powershell.exe -NoP -NonI -W Hidden -enc
+        |   → AMSI bypass
+        |   → RC4 payload download
+        |   → iexeplorer.exe dropped
         |
-        | Registry modification (ms-settings)
-        | fodhelper.exe → UAC bypass
+        |   Registry modification (ms-settings)
+        |   fodhelper.exe → UAC bypass
         |
-        | net.exe /add svcvnc Password123!
-        | net.exe localgroup administrators svcvnc /add
+        |   net.exe /add svcvnc Password123!
+        |   net.exe localgroup administrators svcvnc /add
         v
 PERSISTENCE ESTABLISHED
         |
-        | SMB scanning → 192.168.70.186
-        |              → 192.168.8.103
-        |              → 192.168.8.116
+        |   SMB scanning → 192.168.70.186
+        |                → 192.168.8.103
+        |                → 192.168.8.116
         v
 LATERAL MOVEMENT ATTEMPTED
