@@ -57,7 +57,9 @@ with OGNL expressions and explosion of network
 activity from 2 events/min to 57 events/min
 at exactly 07:05.
 
+<img width="1919" height="673" alt="Capture d&#39;écran 2026-06-06 183126" src="https://github.com/user-attachments/assets/24f2c04f-cd4d-4116-a1a1-c1979bd17ec2" />
 
+<img width="1502" height="630" alt="Capture d&#39;écran 2026-06-06 183312" src="https://github.com/user-attachments/assets/222bdc70-e1f5-40f0-96c2-eab993d9b665" />
 
 ---
 
