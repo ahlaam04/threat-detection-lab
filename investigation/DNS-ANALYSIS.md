@@ -41,7 +41,7 @@ index=botsv3 sourcetype="stream:dns" reply_code="NXDomain"
 
 <img width="1919" height="734" alt="image" src="https://github.com/user-attachments/assets/377a76b2-d1f4-4b28-9de2-d0d2f5867403" />
 
-**the analysis of the DNS logs :
+**the analysis of the DNS logs :**
 ```spl
 index=botsv3 host=serverless source="lambda: DNS" NXDOMAIN
 ```
