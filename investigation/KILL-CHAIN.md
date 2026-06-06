@@ -18,6 +18,7 @@
 
 ## Complete Attack Chain
 
+```
 ATTACKER (192.168.8.103)
         |
         |   POST saveGangster.action
@@ -49,3 +50,4 @@ PERSISTENCE ESTABLISHED
         |                → 192.168.8.116
         v
 LATERAL MOVEMENT ATTEMPTED
+```
