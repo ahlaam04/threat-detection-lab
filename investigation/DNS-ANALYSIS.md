@@ -32,12 +32,22 @@ consistent with :
 
 ## Splunk Queries Used
 
+**the analysis of the DNS logs :
+```spl
+index=botsv3 host=serverless source="lambda: DNS" NXDOMAIN
+```
+"During the analysis of the DNS logs, I noticed several NXDOMAIN requests to unusual subdomains.This behavior may indicate automated activity such as DNS reconnaissance or malware using auto-generated domains.I then used Splunk to count the requests, identify the most frequent domains, and search for the relevant hosts."
+
+<img width="1919" height="754" alt="Capture d&#39;écran 2026-05-23 204050" src="https://github.com/user-attachments/assets/570d04e2-9c4c-4110-9786-83356dda27d9" />
+
+
 **Find all NXDOMAIN responses :**
 ```spl
 index=botsv3 sourcetype="stream:dns" reply_code="NXDomain"
 | stats count by query, host
 | sort -count
 ```
+
 <img width="1919" height="734" alt="image" src="https://github.com/user-attachments/assets/377a76b2-d1f4-4b28-9de2-d0d2f5867403" />
 
 
