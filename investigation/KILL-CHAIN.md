@@ -114,9 +114,4 @@ ABUNGST-L (192.168.24.128)
 | Affected hosts | HOTH, FYODOR-L, ABUNGST-L | Network logs |
 | Port 1337 | Listening on HOTH | osquery ListeningPorts |
 | Tool download | logos.png | 45.77.53.176:3333 |
-        |   SMB scanning → 192.168.70.186
-        |                → 192.168.8.103
-        |                → 192.168.8.116
-        v
-LATERAL MOVEMENT ATTEMPTED
 ```
