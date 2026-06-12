@@ -12,6 +12,12 @@
 **Compromised host :** FYODOR-L.froth.ly
 **Compromised account :** AzureAD\FyodorMalteskesko
 
+## The Attackers
+
+**Attacker 1 :** 192.168.8.103 → Apache Struts RCE + session cookie theft
+**Attacker 2 :** 192.168.8.112 → SugarCRM credential stuffing → ABUNGST-L
+**C2 external :** 45.77.53.176 (port 8088 reverse shell, port 443 C2 persistant)
+
 ---
 
 ## The Story
@@ -60,6 +66,20 @@ the precise moment the exploit began.
 <img width="1919" height="673" alt="Capture d&#39;écran 2026-06-06 183126" src="https://github.com/user-attachments/assets/24f2c04f-cd4d-4116-a1a1-c1979bd17ec2" />
 
 <img width="1502" height="630" alt="Capture d&#39;écran 2026-06-06 183312" src="https://github.com/user-attachments/assets/222bdc70-e1f5-40f0-96c2-eab993d9b665" />
+
+The attacker also dropped a Linux kernel privilege escalation
+exploit via the OGNL payload :
+
+base64 encoded payload → /tmp/colonel
+base64 --decode /tmp/colonel > /tmp/colonel.c
+
+colonel.c targets Ubuntu 16.04 kernel via BPF verifier
+vulnerability — giving the attacker full root access.
+
+**MITRE :** T1068 — Exploitation for Privilege Escalation
+
+<img width="809" height="328" alt="Capture d&#39;écran 2026-06-12 190646" src="https://github.com/user-attachments/assets/39fc71c9-c4ac-4788-8c73-ef9c4eddae04" />
+
 
 ---
 
@@ -183,7 +203,7 @@ planning the next move.
 <img width="1914" height="509" alt="Capture d&#39;écran 2026-06-11 172844" src="https://github.com/user-attachments/assets/9be8ebd4-9e03-4fc2-97c4-94f067355c1c" />
 
 ---
-### Chapter 6 — The Pivot (From HOTH to Windows) ( to confirm ! ) 
+### Chapter 6 — The Pivot (From HOTH to Windows) (CONFIRMED)
 
 **The missing link — Session Cookie Theft**
 
@@ -206,9 +226,20 @@ This explains why FYODOR-L appears later in the attack
 chain without any direct exploitation evidence on
 the Windows machine itself.
 
-**MITRE :** T1539 — Steal Web Session Cookie
+**Update : Confirms the Hypothesis**
+A second attacker (192.168.8.112) simultaneously attempted
+credential stuffing on SugarCRM :
 
+user_name=abugnst
+user_password=ilovedavsbasement
 
+At 07:24:24, this attacker logged into SugarCRM on both
+HOTH and ABUNGST-L — explaining how ABUNGST-L was compromised.
+
+**MITRE :** T1110 — Brute Force / Credential Stuffing
+           T1078 — Valid Accounts
+           
+<img width="820" height="329" alt="Capture d&#39;écran 2026-06-12 190019" src="https://github.com/user-attachments/assets/c893c36e-5fb8-4a65-a50a-8953068851e3" />
 
 ---
 ### Chapter 7 — Becoming Administrator (Privilege Escalation)
@@ -346,25 +377,29 @@ internal reconnaissance :
   192.168.8.103
   192.168.8.116
 ```
-
-ABUNGST-L was also compromised — evidenced by
-1071 C2 connections to 45.77.53.176:443. How ABUNGST-L
-was initially compromised remains under investigation.
-
 **MITRE :** T1082, T1049, T1012, T1021.002, T1046
 
 <img width="1196" height="605" alt="Capture d&#39;écran 2026-06-03 160203" src="https://github.com/user-attachments/assets/3c7c41a1-5dd9-4e57-8781-6df4d9dd1162" />
 
 <img width="664" height="328" alt="Capture d&#39;écran 2026-06-03 154315" src="https://github.com/user-attachments/assets/d9a28a81-1039-4592-b829-a25e001a6be6" />
 
+ABUNGST-L was compromised via SugarCRM credential stuffing by
+a second attacker (192.168.8.112) at 07:24:24, using credentials
+user=abugnst / password=ilovedavsbasement — confirmed by
+stream:http logs showing successful POST to /suitecrm/index.php.
+
+
+
 ---
 | Attribute | Value |
 |-----------|-------|
 | Attack duration | ~15 hours (07:05 → 22:08) |
 | Entry point | Apache Struts RCE on HOTH |
+| Attackers | 2 distinct IPs (192.168.8.103 + 192.168.8.112) |
 | Hosts compromised | HOTH, FYODOR-L, ABUNGST-L |
-| MITRE techniques | 20 across 8 tactics |
+| MITRE techniques | 23 across 9 tactics |
 | IOCs documented | 30+ |
 | Backdoor accounts | tomcat7 (Linux), svcvnc (Windows) |
 | C2 server | 45.77.53.176 (ports 443, 8088, 3333) |
 | Persistence method | Local accounts + Registry + C2 |
+| New findings | colonel.c kernel exploit, SugarCRM credential stuffing |
