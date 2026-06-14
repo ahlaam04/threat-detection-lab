@@ -498,24 +498,35 @@ Panels included :
 
 See [detections/](detections/) folder for all YAML-documented rules.
 
-> Detection rules are being rebuilt based on confirmed findings
+> Detection rules are built based on confirmed findings
 > from the threat hunting investigation. Each rule is tied to
 > a real observation in the BOTS v3 logs.
 
+### Priority 1 — High Confidence (No tuning needed)
+
 | File | Technique | Host | Description |
 |------|-----------|------|-------------|
-| T1190-struts-rce.yml | T1190 | HOTH | Apache Struts OGNL injection detection |
-| T1068-kernel-exploit.yml | T1068 | HOTH | Linux kernel exploit colonel.c |
-| T1136-linux-account.yml | T1136.001 | HOTH | Backdoor account tomcat7 UID=0 |
-| T1071-reverse-shell.yml | T1071.001 | HOTH | Reverse shell to 45.77.53.176 |
-| T1539-session-theft.yml | T1539 | HOTH | SugarCRM session cookie theft |
-| T1059-powershell-obf.yml | T1059.001 | FYODOR-L | PowerShell AMSI bypass |
-| T1548-uac-bypass.yml | T1548.002 | FYODOR-L | UAC bypass via fodhelper |
-| T1136-windows-account.yml | T1136.001 | FYODOR-L | Backdoor account svcvnc |
-| T1110-credential-stuffing.yml | T1110 | ABUNGST-L | SugarCRM credential stuffing |
-| T1082-wmic-recon.yml | T1082 | FYODOR-L | WMIC system reconnaissance |
-| T1049-netstat-recon.yml | T1049 | FYODOR-L | Netstat network discovery |
-| T1012-registry-enum.yml | T1012 | FYODOR-L | Registry software enumeration |
+| T1190-struts-rce.yml | T1190 | HOTH | Apache Struts OGNL injection — POST saveGangster.action |
+| T1136-linux-account.yml | T1136.001 | HOTH | Linux backdoor account tomcat7 UID=0 via syslog |
+| T1136-windows-account.yml | T1136.001 | FYODOR-L | Windows backdoor account svcvnc — EventCode 4720/4732 |
+| T1071-c2-communication.yml | T1071.001 | All | C2 connections to 45.77.53.176 — ports 443/8088/3333 |
+| T1110-credential-stuffing.yml | T1110 | ABUNGST-L | SugarCRM credential stuffing — 192.168.8.112 |
+
+### Priority 2 — Requires Tuning (Context needed)
+
+| File | Technique | Host | Description |
+|------|-----------|------|-------------|
+| T1059-powershell-obf.yml | T1059.001 | FYODOR-L | PowerShell obfuscated — -enc -NoP -W Hidden + parent process |
+| T1548-uac-bypass.yml | T1548.002 | FYODOR-L | UAC bypass fodhelper.exe launched by PowerShell/CMD |
+
+### Priority 3 — Contextual (High volume — needs correlation)
+
+| File | Technique | Host | Description |
+|------|-----------|------|-------------|
+| T1082-wmic-recon.yml | T1082 | FYODOR-L | WMIC system reconnaissance — 536 detections |
+| T1049-netstat-recon.yml | T1049 | FYODOR-L | Netstat network discovery — 78 detections |
+| T1012-registry-enum.yml | T1012 | FYODOR-L | Registry software enumeration — 1037 detections |
+
 
 ---
 
